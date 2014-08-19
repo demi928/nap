@@ -45,7 +45,7 @@ def swap_route(gateway):
 	
 def test_ping(ip):
 	Pingnum=10
-	Timeout=15
+	Timeout=16
 	cmd="/bin/ping %s -c %s -w %s"%(ip,Pingnum,Timeout)	
 	tmp = os.popen(cmd).read() 
 	lost_rate_match = re.compile('(\d+)\spackets transmitted, (\d+)\sreceived,\s(\d+(.\d+)?)')
