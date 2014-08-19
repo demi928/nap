@@ -32,7 +32,7 @@ def restore_net(gateway):
 	return "restore_net"
 
 def set_isSwap(status):
-	global swap_status,isSwap
+    global swap_status,isSwap
 	swap_status["swap"] = status
 	swap_status.write()
 	isSwap = status	
