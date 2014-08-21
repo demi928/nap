@@ -1,0 +1,5 @@
+[main]
+ip1 = ip_addr
+ip2 = ip_addr
+gateway1 = ip_addr
+gateway2 = ip_addr
