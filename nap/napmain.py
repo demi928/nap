@@ -5,11 +5,11 @@ import sys
 import re
 import time
 
-from lib.configobj import ConfigObj
-from lib.validate import Validator
+from nap.lib.configobj import ConfigObj
+from nap.lib.validate import Validator
 
-from utils import shell
-from utils import env
+from nap.utils import shell
+from nap.utils import env
 from nap.common.cfg import CONF
 
 
