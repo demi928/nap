@@ -6,7 +6,6 @@ Created on Aug 22, 2014
 '''
 
 
-
 class Log(object):
     '''
     classdocs
