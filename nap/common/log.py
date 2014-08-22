@@ -1,8 +1,11 @@
+#coding:utf-8
 '''
 Created on Aug 22, 2014
 
 @author: demi
 '''
+
+
 
 class Log(object):
     '''
@@ -15,3 +18,5 @@ class Log(object):
         Constructor
         '''
         
+if __name__ == '__main__':
+    pass
