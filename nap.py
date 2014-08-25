@@ -8,6 +8,7 @@ Created on Aug 22, 2014
 import sys
 
 from nap.main import main
+        
 
 if __name__ == '__main__':
     sys.exit(main())

@@ -16,10 +16,13 @@ from nap.utils import env
 class Config(object):
     
     def __init__(self):
-        self.pythonPath = env.cur_file_dir()
-        self.configfile = self.pythonPath+"/nap/nap.conf"
-        self.configspec = self.pythonPath+"/nap/conf/netswap.confspec"
-        self.swapfile = self.pythonPath+"/nap/conf/nap.status"
+#        self.pythonpath = env.cur_file_dir()
+        self.pythonpath = "/root/nap"
+        self.logpath = self.pythonpath+"/nap/log"
+        self.logConfigFile = self.pythonpath+"/nap/conf/logging.conf"
+        self.configfile = self.pythonpath+"/nap/nap.conf"
+        self.configspec = self.pythonpath+"/nap/conf/netswap.confspec"
+        self.swapfile = self.pythonpath+"/nap/conf/nap.status"
         self._setup(self.configfile, self.configspec, self.swapfile)
     
     def _setup(self,configfile,configspec,swapfile):
@@ -27,8 +30,9 @@ class Config(object):
         if not os.path.isfile(self.swapfile):
             os.popen("/bin/echo swap = False > "+self.swapfile)
         
-        self.swap_status = ConfigObj(self.swapfile,encoding='UTF8')
-        self.isSwap = self.swap_status["swap"]
+        if  os.path.isfile(self.swapfile):
+            self.swap_status = ConfigObj(self.swapfile,encoding='UTF8')
+            self.isSwap = self.swap_status["swap"]
         
         if not os.path.isfile(self.configfile):
             print "file "+self.configfile+" not exist."
@@ -40,7 +44,7 @@ class Config(object):
         if not test == True:
             print "Configuration file parameters errors"
             exit()
-    
+        
     
     def get_sections(self):
         return self.config.keys()
@@ -49,9 +53,14 @@ class Config(object):
         return self.config[section_name]
     
     def list(self):
+        ls = {}
         for i in self.__dict__ :
-            print i+" : "+self.__dict__[i]
-
+            if isinstance(self.__dict__[i],(str,unicode)):
+                ls[i] = self.__dict__[i]
+            else:
+                ls[i] = type(self.__dict__[i])
+                
+        return ls
 
 CONF = Config()
 
