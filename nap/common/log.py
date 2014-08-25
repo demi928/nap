@@ -24,6 +24,9 @@ class Log(object):
     def get_logger(self):
         return self.logger
     
+    def get_loggerWithName(self,name):
+        return logging.getLogger(name)
+    
 LOG = Log()
 logger = LOG.get_logger()
 

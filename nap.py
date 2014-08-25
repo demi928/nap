@@ -8,7 +8,9 @@ Created on Aug 22, 2014
 import sys
 
 from nap.main import main
+from nap.napclient import shell
         
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(shell.main())
+#    sys.exit(main())
