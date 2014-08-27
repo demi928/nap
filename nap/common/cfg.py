@@ -33,6 +33,7 @@ class Config(object):
         if  os.path.isfile(self.swapfile):
             self.swap_status = ConfigObj(self.swapfile,encoding='UTF8')
             self.isSwap = self.swap_status["swap"]
+            self.isRun = self.swap_status["isRun"]
         
         if not os.path.isfile(self.configfile):
             print "file "+self.configfile+" not exist."

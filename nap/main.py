@@ -4,12 +4,12 @@ import time
 from nap.common.cfg import CONF
 
 from nap.utils import shell
-from nap.net import netswitch
+from nap.net.net_monitor import NetMonitor
 
 
 
 def main():
-    netswitch.main()
+    pass
 
 if __name__ == '__main__':
     main()

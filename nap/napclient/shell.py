@@ -12,6 +12,7 @@ import nap.napclient
 from nap.napclient import logger
 from nap.napclient.v1 import shell as shell_v1
 from nap.napclient import utils
+from nap.napclient import client
 
 
 
@@ -33,11 +34,11 @@ class NapShell(object):
             help=argparse.SUPPRESS,
         )
         
-        parser.add_argument('--version',
+        parser.add_argument('-v','--version',
                             action='version',
                             version="0.0.1")
         
-        parser.add_argument('--debug',
+        parser.add_argument('-d','--debug',
             default=False,
             action='store_true',
             help="Print debugging output")
@@ -50,15 +51,18 @@ class NapShell(object):
         subparsers = parser.add_subparsers(metavar='<subcommand>')
         
         actions_module = shell_v1
+        self._find_actions(subparsers, actions_module,startswith="sub",has_subcommand=True)
         self._find_actions(subparsers, actions_module)
         self._find_actions(subparsers, self)
         
+  
         return parser
     
-    def _find_actions(self, subparsers, actions_module):
-        for attr in (a for a in dir(actions_module) if a.startswith('do_')):
+    def _find_actions(self, subparsers, actions_module,startswith="do",has_subcommand=False):
+        startlen = len(startswith) + 1
+        for attr in (a for a in dir(actions_module) if a.startswith(startswith)):
             # I prefer to be hyphen-separated instead of underscores.
-            command = attr[3:].replace('_', '-')
+            command = attr[startlen:].replace('_', '-')
             callback = getattr(actions_module, attr)
             desc = callback.__doc__ or ''
             action_help = desc.strip()
@@ -74,10 +78,20 @@ class NapShell(object):
                 action='help',
                 help=argparse.SUPPRESS,
             )
-            self.subcommands[command] = subparser
-            for (args, kwargs) in arguments:
-                subparser.add_argument(*args, **kwargs)
-            subparser.set_defaults(func=callback)
+            if startswith != "do" and startswith != "sub":
+                self.subcommands[attr[:].replace('_', '-')] = subparser
+            else:
+                self.subcommands[command] = subparser
+            
+            if has_subcommand:
+                sub = self.subcommands[command].add_subparsers(metavar='<subcommand>')
+                self._find_actions(sub, actions_module,startswith=attr[startlen:])
+            else:
+                for (args, kwargs) in arguments:
+                    subparser.add_argument(*args, **kwargs)
+                subparser.set_defaults(func=callback)
+        
+        
     
     def setup_debugging(self, debug):
         if not debug:
@@ -100,23 +114,28 @@ class NapShell(object):
             return 0
         
         args = subcommand_parser.parse_args(argv)
-        
+
         if args.func == self.do_help:
             self.do_help(args)
             return 0
         
-        args.func("dd", "dd")
+        cs = client.Client("1")
+        args.func(cs,args)
         
     
-    @utils.arg('command', metavar='<subcommand>', nargs='?',
+    @utils.arg('command', metavar='<subcommand>', nargs='*',
                     help='Display help for <subcommand>')
     def do_help(self, args):
         """
         Display help about this program or one of its subcommands.
-        """
+        """  
         if args.command:
-            if args.command in self.subcommands:
-                self.subcommands[args.command].print_help()
+            if len(args.command) > 1:
+                command = args.command[0] +"-" + args.command[1]
+            else:
+                command = args.command[0]
+            if command in self.subcommands:
+                self.subcommands[command].print_help()
             else:
                 print(("'%s' is not a valid subcommand") %
                                        args.command)
@@ -145,7 +164,7 @@ class NapClientArgumentParser(argparse.ArgumentParser):
 
 
 class NapHelpFormatter(argparse.HelpFormatter):
-    def __init__(self, prog, indent_increment=2, max_help_position=32,
+    def __init__(self, prog, indent_increment=2, max_help_position=52,
                  width=None):
         super(NapHelpFormatter, self).__init__(prog, indent_increment,
               max_help_position, width)
@@ -160,6 +179,9 @@ class NapHelpFormatter(argparse.HelpFormatter):
 
 def main():
     NapShell().main(sys.argv[1:])
+    while True:
+        args = raw_input().split()
+        NapShell().main(args[1:])
 
 
 if __name__ == "__main__":
