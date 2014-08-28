@@ -15,9 +15,6 @@ from wsgiref.simple_server import make_server
 
 
 class ShowVersion(object):
-      '''
-      app
-      '''
       def __init__(self,version):
           self.version = version
       def __call__(self,environ,start_response):
@@ -27,10 +24,11 @@ class ShowVersion(object):
           content = ["hello"]
           content.append("%s\n" % self.version)
           res.body = '\n'.join(content)
+          
+          
           return res(environ,start_response)
       @classmethod
       def factory(cls,global_conf,**kwargs):
-          print 'factory'
           print "kwargs:",kwargs
           return ShowVersion(kwargs['version'])
 
@@ -43,9 +41,11 @@ class LogFilter(object):
           self.app = app
       def __call__(self,environ,start_response):
           print "you can write log"
+          
           return self.app(environ,start_response)
       @classmethod
       def factory(cls,global_conf,**kwargs):
+          
           return LogFilter
 
 config = "/root/nap/api-paste.ini"
