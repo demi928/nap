@@ -31,17 +31,15 @@ class NetMonitorClass(threading.Thread):
         
     def _run(self):
         while True:
-            if CONF.swap_status["isRun"]:
+            if NetMonitorClass.isRun == "True":
                 result = shell.test_ping(NetMonitorClass.test_ip)
                 if result :
                     self._restore_net(NetMonitorClass.default_gw)
                 else:
                     self._swap_net(NetMonitorClass.switch_gw)
-                self.show()
                 time.sleep(3)
             else:
-                self.show()
-                time.sleep(5)
+                time.sleep(10)
                 
         
     def _swap_net(self,gateway):
@@ -78,21 +76,22 @@ class NetMonitorClass(threading.Thread):
             logger.info("switch route to %s" % gateway)
       
     def monitor_start(self):
-        NetMonitorClass.isRun = True
-        CONF.swap_status["isRun"] = True
+        NetMonitorClass.isRun = "True"
+        CONF.swap_status["isRun"] = "True"
         CONF.swap_status.write()
         
     def monitor_stop(self):
-        NetMonitorClass.isRun = False
-        CONF.swap_status["isRun"] = False
+        NetMonitorClass.isRun = "False"
+        CONF.swap_status["isRun"] = "False"
         CONF.swap_status.write()
         
     def show(self,msg=""):
+        re = {}
         for name,value in vars(NetMonitorClass).items():
             if isinstance(value,(str,bool,unicode)):
-                print('%s : %s'%(name,value))
-            
-        print msg
+                re[name] = value
+        re["msg"] = msg    
+        return re
 
 
     def set(self,test_ip,default_gw,switch_gw):

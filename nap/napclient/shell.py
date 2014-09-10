@@ -179,9 +179,9 @@ class NapHelpFormatter(argparse.HelpFormatter):
 
 def main():
     NapShell().main(sys.argv[1:])
-    while True:
-        args = raw_input().split()
-        NapShell().main(args[1:])
+#    while True:
+#        args = raw_input().split()
+#        NapShell().main(args[1:])
 
 
 if __name__ == "__main__":

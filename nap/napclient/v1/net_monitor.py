@@ -4,7 +4,7 @@ Created on Aug 26, 2014
 
 @author: demi
 '''
-from nap.net.net_monitor import NetMonitor
+
 
 
 from nap.napclient import base
@@ -17,16 +17,16 @@ class NetMonitorManager(base.ManagerWithFind):
     resource_class = NetMonitorResource
     
     def monitor_start(self):
-        NetMonitor.monitor_start()
+        pass
     
     def monitor_stop(self):
-        NetMonitor.monitor_stop()
+        pass
     
     def list(self):
-        NetMonitor.show()
+        pass
     
     def set(self,test_ip,default_gw, switch_gw):
-        NetMonitor.set(test_ip, default_gw, switch_gw)
+        pass
     
     def show(self,server):
         pass

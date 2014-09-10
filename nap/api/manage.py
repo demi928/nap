@@ -9,9 +9,6 @@ Created on Aug 27, 2014
 from webob import Request
 from webob import Response
 
-import routes
-from paste.deploy import loadapp
-from wsgiref.simple_server import make_server  
 
 
 class ShowVersion(object):
@@ -48,12 +45,7 @@ class LogFilter(object):
           
           return LogFilter
 
-config = "/root/nap/api-paste.ini"
-appname = "common"
-wsgi_app = loadapp("config:%s" % config, appname)
-server = make_server('0.0.0.0',9001,wsgi_app)
-print dir(server)
-server.serve_forever()
+
 
 if __name__ == '__main__':
     pass
