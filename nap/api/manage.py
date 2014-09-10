@@ -52,6 +52,7 @@ config = "/root/nap/api-paste.ini"
 appname = "common"
 wsgi_app = loadapp("config:%s" % config, appname)
 server = make_server('0.0.0.0',9001,wsgi_app)
+print dir(server)
 server.serve_forever()
 
 if __name__ == '__main__':

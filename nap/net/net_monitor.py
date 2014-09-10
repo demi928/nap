@@ -103,7 +103,7 @@ class NetMonitorClass(threading.Thread):
  
 NetMonitor = NetMonitorClass("NetMonitor")
 NetMonitor.setDaemon(True)
-NetMonitor.start()
+
 
 if __name__ == '__main__':
     pass
