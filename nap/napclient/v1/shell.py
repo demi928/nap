@@ -7,6 +7,7 @@ Created on Aug 25, 2014
 
 from nap.napclient import utils
 from nap.napclient import logger
+from nap.napclient.v1 import cls_print
 
 def sub_net_monitor (cs, args):
     """net monitor module."""
@@ -22,7 +23,7 @@ def net_monitor_stop(cs, args):
     
 def net_monitor_list(cs, args):
     """List the net-monitor status."""
-    _print_net_monitor(cs.net_monitor.list().json()) 
+    cls_print.print_monitor_list(cs.net_monitor.list().json()) 
 
 
 @utils.arg('test_ip', metavar='<test_ip>', help=('test_ip.'))
@@ -30,7 +31,7 @@ def net_monitor_list(cs, args):
 @utils.arg('switch_gw', metavar='<switch_gw>', help=('switch_gw.'))
 def net_monitor_set(cs, args):
     """ Set the net-monitor arguments"""
-    _print_net_monitor(cs.net_monitor.set(
+    cls_print.print_monitor_list(cs.net_monitor.set(
                                 args.test_ip,
                                 args.default_gw,
                                 args.switch_gw
@@ -41,19 +42,8 @@ def net_monitor_set(cs, args):
 @utils.arg('server', metavar='<server>', help=('Name or ID of server.'))
 def net_monitor_show(cs, args):
     """Show details about the given server."""
-    _print_net_monitor(cs.net_monitor.show().json())
+    cls_print.print_monitor_list(cs.net_monitor.show().json())
 
-
-def _print_net_monitor(dic):
-    fields = [
-        'Test IP',
-        'Default GW',
-        'Switch GW',
-        'Is Running',
-        'Is Switch'
-    ]
-    
-    utils.print_dict_horizon(dic,fields)
 
 
 if __name__ == '__main__':
