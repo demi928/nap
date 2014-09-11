@@ -13,6 +13,8 @@ class Controller(object):
     def __init__(self):
         pass
 
+    def detail(self,req):
+        return NetMonitor.show()
 
     def index(self, req):
         return NetMonitor.show()
@@ -29,6 +31,7 @@ class Controller(object):
         test_ip = req.headers.get("test_ip")
         default_gw = req.headers.get("default_gw")
         switch_gw = req.headers.get("switch_gw")
+        
         NetMonitor.set(test_ip, default_gw, switch_gw)
         
         return NetMonitor.show()

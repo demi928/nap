@@ -86,11 +86,14 @@ class NetMonitorClass(threading.Thread):
         CONF.swap_status.write()
         
     def show(self,msg=""):
-        re = {}
-        for name,value in vars(NetMonitorClass).items():
-            if isinstance(value,(str,bool,unicode)):
-                re[name] = value
-        re["msg"] = msg    
+        re = {
+            'test_ip': NetMonitorClass.test_ip,
+            'default_gw': NetMonitorClass.default_gw,
+            'switch_gw': NetMonitorClass.switch_gw,
+            'is_running': NetMonitorClass.isRun,
+            'is_switch': NetMonitorClass.isSwap,
+        }
+          
         return re
 
 

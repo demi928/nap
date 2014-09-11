@@ -18,7 +18,8 @@ class MyRouterApp(wsgi.Router):
     def _setup_routes(self,mapper):
         self.resources['net_monitor'] = net_monitor.create_resource()
         mapper.resource("net_monitor", "net_monitors",
-                    controller=self.resources['net_monitor'])
+                    controller=self.resources['net_monitor'],
+                    collection={'detail': 'GET'})
 
 
 

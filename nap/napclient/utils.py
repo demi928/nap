@@ -6,6 +6,9 @@ Created on Aug 25, 2014
 '''
 import sys
 
+import prettytable
+import six
+
 def import_class(import_str):
     """Returns a class from a string including module and class."""
     mod_str, _sep, class_str = import_str.rpartition('.')
@@ -55,6 +58,76 @@ class HookableMixin(object):
         hook_funcs = cls._hooks_map.get(hook_type) or []
         for hook_func in hook_funcs:
             hook_func(*args, **kwargs)
+
+def print_list(objs, fields, formatters={}, sortby_index=None):
+    if sortby_index is None:
+        sortby = None
+    else:
+        sortby = fields[sortby_index]
+    mixed_case_fields = ['serverId']
+    pt = prettytable.PrettyTable([f for f in fields], caching=False)
+    pt.align = 'l'
+
+    for o in objs:
+        row = []
+        for field in fields:
+            if field in formatters:
+                row.append(formatters[field](o))
+            else:
+                if field in mixed_case_fields:
+                    field_name = field.replace(' ', '_')
+                else:
+                    field_name = field.lower().replace(' ', '_')
+                data = getattr(o, field_name, '')
+                if data is None:
+                    data = '-'
+                row.append(data)
+        pt.add_row(row)
+
+        result = pt.get_string()
+
+    print(result)
+
+
+def print_dict_horizon(dic, fields, formatters={}):
+    pt = prettytable.PrettyTable([f for f in fields], caching=False)
+    pt.align = 'l'
+    row = []
+    for field in fields:
+        if field in formatters:
+            pass
+        else:
+            field_name = field.lower().replace(' ', '_')
+            data = dic[field_name]
+            if data is None:
+                data = '-'
+            row.append(data)
+    pt.add_row(row)
+    result = pt.get_string()
+    print(result)
+
+
+def print_dict(d, dict_property="Property", dict_value="Value", wrap=0):
+    pt = prettytable.PrettyTable([dict_property, dict_value], caching=False)
+    pt.align = 'l'
+    for k, v in sorted(d.items()):
+        # convert dict to str to check length
+        
+        # if value has a newline, add in multiple rows
+        # e.g. fault with stacktrace
+        if v and isinstance(v, six.string_types) and r'\n' in v:
+            lines = v.strip().split(r'\n')
+            col1 = k
+            for line in lines:
+                pt.add_row([col1, line])
+                col1 = ''
+        else:
+            if v is None:
+                v = '-'
+            pt.add_row([k, v])
+    result = pt.get_string()
+    print(result)
+
 
 if __name__ == '__main__':
     pass
